@@ -11,6 +11,12 @@ df2 = pd.read_csv(r"C:\Users\nahum\Downloads\monthly_performance.csv")
 df3 = pd.read_csv(r"C:\Users\nahum\Downloads\borrower_demographics.csv")
 df4 = pd.read_csv(r"C:\Users\nahum\Downloads\loan_master.csv")
 
+# Checking for issues 
+print(df1.isnull().sum())
+print(df2.isnull().sum())
+print(df3.isnull().sum())
+print(df4.isnull().sum())
+
 print(df1.describe())
 print(df2.describe())
 print(df3.describe())
