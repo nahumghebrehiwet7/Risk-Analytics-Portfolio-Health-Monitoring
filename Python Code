@@ -1,0 +1,17 @@
+## Python code used for the project 
+
+The code used is mainly used to check for issues and generating basic summary statistics. Python easier for me for this task compared to excel and SQL ##
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+df1 = pd.read_csv(r'C:\Users\nahum\Downloads\date_dim.csv')
+df2 = pd.read_csv(r"C:\Users\nahum\Downloads\monthly_performance.csv")
+df3 = pd.read_csv(r"C:\Users\nahum\Downloads\borrower_demographics.csv")
+df4 = pd.read_csv(r"C:\Users\nahum\Downloads\loan_master.csv")
+
+print(df1.describe())
+print(df2.describe())
+print(df3.describe())
+print(df4.describe())
