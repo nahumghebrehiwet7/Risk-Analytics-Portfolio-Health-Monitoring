@@ -1,0 +1,43 @@
+## This space provides all the SQL coding used for this project 
+
+# Delinquency by loan intent
+select
+loan_purpose,
+count(loan_id) as Total,
+count(case when is_delinquent = 'True' then loan_id end) as Delinquent_Count,
+count(case when is_delinquent = 'False' then loan_id end) as Non_delinquent_Count,
+(count(case when is_delinquent = 'True' then loan_id end)/count(loan_id)) as Percentage_Delinquent
+from loan_master
+group by loan_purpose
+order by Percentage_delinquent desc;
+
+# Delinquency by FICO band 
+select
+a.fico_band,
+count(loan_id) as Total,
+count(case when is_delinquent = 'True' then loan_id end) as Delinquent_Count,
+count(case when is_delinquent = 'False' then loan_id end) as Non_delinquent_Count,
+(count(case when is_delinquent = 'True' then loan_id end)/count(loan_id)) as Percentage_Delinquent
+from borrower_demographics a
+left join loan_master b on a.borrower_id=b.borrower_id
+group by fico_band
+order by Percentage_Delinquent;
+
+# Delinquency by age group
+select 
+case
+when age = 19 then "19 years old"
+when age < 30 and age > 19 then "20-29 years"
+when age < 45 and age >= 30 then "30-44 years"
+when age < 60 and age >= 45 then "45-59 years"
+else "60+ years"
+end as age_group,
+count(case when is_delinquent = "True" then loan_id end) as delinquent_count,
+count(case when is_delinquent = "False" then loan_id end) as non_delinquent_count,
+count(is_delinquent),
+(count(case when is_delinquent = "True" then loan_id end)/count(is_delinquent)) as delinquent_percentage
+from borrower_demographics a
+join loan_master b
+on a.borrower_id=b.borrower_id
+group by age_group
+order by delinquent_percentage desc;
