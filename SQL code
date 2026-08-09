@@ -41,3 +41,28 @@ join loan_master b
 on a.borrower_id=b.borrower_id
 group by age_group
 order by delinquent_percentage desc;
+
+# Delinquency by Income and Loan to Debt Ratio
+select
+case
+when annual_income < 40000 then 'Below $40,000'
+when annual_income >= 40000 and annual_income < 60000 then '$40,000-$60,000'
+when annual_income >= 60000 and annual_income < 100000 then '$60,000-$100,000'
+else 'Above $100,000'
+end as income_bracket,
+case
+when dti_ratio < 20 then "Below 20%"
+when dti_ratio >= 20 and dti_ratio < 30 then "20-30%"
+when dti_ratio >= 30 and dti_ratio < 40 then "30-40%"
+when dti_ratio >= 40 and dti_ratio < 50 then "40-50%"
+else "Above 50%"
+end as Loan_To_Debt_Ratio,
+count(case when is_delinquent = "true" then loan_id end) as Delinquent_Count,
+count(case when is_delinquent = "false" then loan_id end) as Non_Delinquent_Count,
+count(a.borrower_id) as Count,
+(count(case when is_delinquent = "true" then loan_id end)/count(a.borrower_id)) as Delinquency_Percentage
+from borrower_demographics a
+join loan_master b
+on a.borrower_id = b.borrower_id
+group by income_bracket, Loan_To_Debt_Ratio
+order by Delinquency_Percentage  desc;
