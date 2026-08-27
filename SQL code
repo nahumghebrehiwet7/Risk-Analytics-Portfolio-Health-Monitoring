@@ -63,6 +63,30 @@ count(a.borrower_id) as Count,
 (count(case when is_delinquent = "true" then loan_id end)/count(a.borrower_id)) as Delinquency_Percentage
 from borrower_demographics a
 
+# Delinquency by income and LTD v2
+select
+case
+when annual_income < 40000 then 'Below $40,000'
+when annual_income >= 40000 and annual_income < 60000 then '$40,000-$60,000'
+when annual_income >= 60000 and annual_income < 100000 then '$60,000-$100,000'
+else 'Above $100,000'
+end as income_bracket,
+case
+when dti_ratio < 25 then "Below 25%"
+when dti_ratio >= 25 and dti_ratio < 35 then "25-35%"
+when dti_ratio >= 35 and dti_ratio < 45 then "30-45%"
+else "Above 45%"
+end as Loan_To_Debt_Ratio,
+count(case when is_delinquent = "true" then loan_id end) as Delinquent_Count,
+count(case when is_delinquent = "false" then loan_id end) as Non_Delinquent_Count,
+count(a.borrower_id) as Count,
+(count(case when is_delinquent = "true" then loan_id end)/count(a.borrower_id)) as Delinquency_Percentage
+from borrower_demographics a
+join loan_master b
+on a.borrower_id = b.borrower_id
+group by income_bracket, Loan_To_Debt_Ratio
+order by Delinquency_Percentage  desc;
+
 # Delinquency by State
 select
 origination_state,
