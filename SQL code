@@ -62,6 +62,17 @@ count(case when is_delinquent = "false" then loan_id end) as Non_Delinquent_Coun
 count(a.borrower_id) as Count,
 (count(case when is_delinquent = "true" then loan_id end)/count(a.borrower_id)) as Delinquency_Percentage
 from borrower_demographics a
+
+# Delinquency by State
+select
+origination_state,
+(count(case when is_delinquent = 'True' then loan_id end)) as delinquent_count,
+(count(case when is_delinquent = 'false' then loan_id end)) as non_delinquent_count,
+count(loan_id),
+(count(case when is_delinquent = 'True' then loan_id end)/count(loan_id)) as delinquent_percentage
+from loan_master
+group by origination_state
+order by count(loan_id) asc; 
 join loan_master b
 on a.borrower_id = b.borrower_id
 group by income_bracket, Loan_To_Debt_Ratio
