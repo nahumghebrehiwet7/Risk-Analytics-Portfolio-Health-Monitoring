@@ -101,3 +101,11 @@ join loan_master b
 on a.borrower_id = b.borrower_id
 group by income_bracket, Loan_To_Debt_Ratio
 order by Delinquency_Percentage  desc;
+
+
+# Unsure why some states have higher delinquency
+select
+avg(fico_score),
+(select avg(fico_score) from borrower_demographics)
+from borrower_demographics
+where state  = 'FL' or 'LA' or 'NV' or 'MS'
