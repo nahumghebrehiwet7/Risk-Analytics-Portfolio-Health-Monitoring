@@ -104,8 +104,14 @@ order by Delinquency_Percentage  desc;
 
 
 # Unsure why some states have higher delinquency
-select
-avg(fico_score),
-(select avg(fico_score) from borrower_demographics)
-from borrower_demographics
-where state  = 'FL' or 'LA' or 'NV' or 'MS'
+SELECT 
+    CASE 
+        WHEN origination_state IN ('FL','LA','NV','MS') THEN 'High-Delinq States'
+        ELSE 'All Other States'
+    END AS state_group,
+    avg(interest_rate),
+    avg(fico_score)
+    from loan_master a
+    join borrower_demographics b
+    on a.borrower_id=b.borrower_id
+    group by state_group
